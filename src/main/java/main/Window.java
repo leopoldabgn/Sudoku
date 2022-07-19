@@ -1,8 +1,11 @@
 package main;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -51,7 +54,7 @@ public class Window extends JFrame
 		private static final long serialVersionUID = 1L;
 		{
             putValue(Action.NAME, "Refresh");
-            putValue(Action.SMALL_ICON, new ImageIcon(getClass().getClassLoader().getResource("reset.png")));
+            putValue(Action.SMALL_ICON, new ImageIcon(getClass().getClassLoader().getResource("icons/reset.png")));
             putValue(Action.MNEMONIC_KEY, KeyEvent.VK_R);
             putValue(Action.SHORT_DESCRIPTION, "Reset (CTRL+R)");
             putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_DOWN_MASK)); 
@@ -71,14 +74,14 @@ public class Window extends JFrame
 	            if(rep < 0 || rep > 2)
 	            	return;
 	            rep2 =  JOptionPane.showOptionDialog(null,
-	                    "Difficulté ?", "Difficulté",
+	                    "Difficultï¿½ ?", "DifficultÃ©",
 	                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"1", "2", "3"}, null);
             }
             remove(sudoku);
             sudoku = new Sudoku(rep+2, rep2);
             add(sudoku);
             System.out.println("Nouveau Sudoku : ");
-            System.out.println("Niveau="+rep+"\nDifficulté="+rep2);
+            System.out.println("Niveau="+rep+"\nDifficultÃ©="+rep2);
         }
     };
     
@@ -87,7 +90,7 @@ public class Window extends JFrame
 		private static final long serialVersionUID = 1L;
 		{
             putValue(Action.NAME, "Indice");
-            putValue(Action.SMALL_ICON, new ImageIcon(getClass().getClassLoader().getResource("lamp2.jpg")));
+            putValue(Action.SMALL_ICON, new ImageIcon(getClass().getClassLoader().getResource("icons/lamp2.jpg")));
             putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
             putValue(Action.SHORT_DESCRIPTION, "Indice (CTRL+I)");
             putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK)); 
@@ -97,11 +100,16 @@ public class Window extends JFrame
         {
             System.out.println("Indice...");
             int rep = JOptionPane.showOptionDialog(null,
-                    "Il vous reste "+sudoku.nbIndices()+" indices. Voulez-vous en débloquer un ?", "Indices",
+                    "Il vous reste "+sudoku.nbIndices()+" indices. Voulez-vous en dÃ©bloquer un ?", "Indices",
                     JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[] {"Oui", "Non"}, null);
             if(rep == JOptionPane.YES_OPTION)
             	sudoku.revealIndice();
         }
     };
 	
+	public static Image getImage(final String pathAndFileName) {
+		final URL url = Thread.currentThread().getContextClassLoader().getResource(pathAndFileName);
+		return Toolkit.getDefaultToolkit().getImage(url);
+	}
+
 }

@@ -8,7 +8,7 @@ public class Main
 	public static void main(String[] args)
 	{
 		UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
-		// Permet de valider un bouton selectionné directement avec Entrée.
+		// Permet de valider un bouton selectionnÃ© directement avec EntrÃ©e.
 		// (En plus de barre espace)
 		new Window(600, 600);
 	}
