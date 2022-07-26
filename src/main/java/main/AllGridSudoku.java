@@ -5,9 +5,9 @@ import java.util.ArrayList;
 public class AllGridSudoku
 {
 	
-	static int dim, dimTotale;
-	static int[][] grille;
-	static int sol;
+	private static int dim, dimTotale;
+	private static int[][] grille;
+	private static int sol;
 	
 	public static void init(int n)
 	{

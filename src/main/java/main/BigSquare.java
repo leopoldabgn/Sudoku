@@ -12,13 +12,12 @@ import javax.swing.JPanel;
 
 public class BigSquare extends JPanel
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 111999380273717286L;
 	
 	private Square[][] squares;
 	
 	public BigSquare(Square[][] squares)
 	{
-		super();
 		this.squares = squares;
 		int s = (int)squares[0][0].getPreferredSize().getWidth()*squares.length;
 		this.setPreferredSize(new Dimension(s, s));
@@ -29,7 +28,7 @@ public class BigSquare extends JPanel
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 3));
 		this.setBackground(Color.BLACK);
 	}
-	
+
 	public void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);

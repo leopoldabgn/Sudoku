@@ -16,17 +16,17 @@ import javax.swing.JPanel;
 public class Square extends JPanel
 {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6662729383768132666L;
 
 	private int nb, max;
-	private boolean start, visible, selected, pushed, error, light, indice;
+	private boolean start, pushed, visible, error, light, indice;
+	private transient boolean selected;
 	private JLabel lbl;
 	
 	private static Square actualSquare;
 	
 	public Square(int nb, int max, boolean visible)
 	{
-		super();
 		this.visible = visible;
 		this.max = max;
 		this.visible = visible;
@@ -44,9 +44,36 @@ public class Square extends JPanel
 		}
 		else
 			lbl.setText("");
+		addListeners();
+	}
+	
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D)g;
+		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		if(selected)
+		{
+			if(!pushed)
+			{
+				g2d.setColor(Color.BLUE);
+				this.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
+			}
+		}
 		
-		Square self = this;
+		if(light)
+			this.setBackground(Color.CYAN);
 		
+		if(!start)
+			lbl.setForeground(error ? Color.RED : (indice ? new Color(255, 208, 0) : Color.BLUE));
+			
+		int min = getWidth() < getHeight() ? getWidth() : getHeight();
+		lbl.setFont(new Font(Font.SANS_SERIF, Font.BOLD, min/2));
+	}
+	
+	public void addListeners()
+	{
+		Square self = this;	
 		this.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if(error)
@@ -102,34 +129,8 @@ public class Square extends JPanel
 		    
 			}
 		});
-		
 	}
-	
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D)g;
-		this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-		if(selected)
-		{
-			if(!pushed)
-			{
-				g2d.setColor(Color.BLUE);
-				this.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
-			}
-		}
-		
-		if(light)
-			this.setBackground(Color.CYAN);
-		
-		if(!start)
-		{
-			lbl.setForeground(error ? Color.RED : (indice ? new Color(255, 208, 0) : Color.BLUE));
-		}
-		int min = getWidth() < getHeight() ? getWidth() : getHeight();
-		lbl.setFont(new Font(Font.SANS_SERIF, Font.BOLD, min/2));
-	}
-	
+
 	public int getNb()
 	{
 		return nb;
@@ -150,7 +151,7 @@ public class Square extends JPanel
 	
 	public int getLblNumber()
 	{
-		if(lbl.getText() == "")
+		if(lbl.getText().isBlank())
 			return 0;
 		else
 			return Integer.parseInt(lbl.getText());
@@ -245,5 +246,10 @@ public class Square extends JPanel
 	{
 		return !visible;
 	}
-	
+
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
 }

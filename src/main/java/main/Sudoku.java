@@ -1,14 +1,21 @@
 package main;
 
 import java.awt.GridLayout;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.swing.JPanel;
 
-public class Sudoku extends JPanel
+public class Sudoku extends JPanel implements Cloneable
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 989728228987307283L;
+	public static final String LAST_SUDOKU_NAME = "last_sudoku.save";
 
 	private int dim, lvl, difficulty, indices;
 	private int[][] grid;
@@ -18,7 +25,6 @@ public class Sudoku extends JPanel
 	
 	public Sudoku(int lvl, int difficulty)
 	{
-		super();
 		Sudoku.actualSudoku = this;
 		
 		if(lvl < 2)
@@ -180,6 +186,84 @@ public class Sudoku extends JPanel
 		Collections.shuffle(l);
 		indices--;
 		l.get(0).setIndice(true);
+	}
+	
+	public void addListeners()
+	{
+		for(Square[] sqrTab : sqrGrid)
+			for(Square s : sqrTab)
+				s.addListeners();
+	}
+
+	public void save(String name)
+	{
+		Sudoku sudoku = null;
+		try {
+			sudoku = (Sudoku)this.clone();
+			Square sqr = null;
+			for(int j=0;j<sqrGrid.length;j++)
+			{
+				for(int i=0;i<sqrGrid[j].length;i++)
+				{
+					sqr = sqrGrid[j][i];
+					if(sqr.isLight())
+					{
+						sqr.resetAllLight(sudoku);
+						j = sqrGrid.length;
+						break;
+					}
+					else if(sqr.isSelected() && !sqr.isPushed())
+					{
+						sqr.resetSquare(sqr);
+						j = sqrGrid.length;
+						break;
+					}
+				}
+			}
+
+		} catch (CloneNotSupportedException e1) {
+			e1.printStackTrace();
+		}
+		ObjectOutputStream oos = null;
+		File file = new File(name);
+		try {
+			oos =  new ObjectOutputStream(new FileOutputStream(file));
+			oos.writeObject(sudoku);
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();	
+		}
+	}
+	
+	public static Sudoku load(String name)
+	{
+		Sudoku sudoku = null;
+		ObjectInputStream ois = null;
+		File file = new File(name);
+		if(file.exists())
+		{
+			try {
+				ois =  new ObjectInputStream(new FileInputStream(file)) ;
+				sudoku = (Sudoku)ois.readObject();
+				ois.close();
+				sudoku.addListeners();
+				Sudoku.actualSudoku = sudoku;
+			} catch (NullPointerException | IOException | ClassNotFoundException e) {
+				e.printStackTrace();
+			}	
+		}
+		
+		return sudoku;
+	}
+
+	public void saveLastSudoku()
+	{
+		save(LAST_SUDOKU_NAME);
+	}
+
+	public static Sudoku loadLastSudoku()
+	{
+		return load(LAST_SUDOKU_NAME);
 	}
 	
 	public Square[][] getSqrGrid()

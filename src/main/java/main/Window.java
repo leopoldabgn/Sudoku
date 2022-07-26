@@ -5,6 +5,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
 
 import javax.swing.AbstractAction;
@@ -19,12 +21,11 @@ public class Window extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	
-	private Sudoku sudoku = new Sudoku(3, 1);
+	private Sudoku sudoku;
 	private JToolBar toolBar = new JToolBar();
 	
 	public Window(int w, int h)
 	{
-		super();
 		this.setTitle("Sudoku");
 		this.setSize(w, h);
 		this.setResizable(true);
@@ -38,6 +39,21 @@ public class Window extends JFrame
 		
 		initToolBar();
 		
+		sudoku = Sudoku.loadLastSudoku();
+		
+		if(sudoku == null)
+			sudoku = new Sudoku(3, 1);
+
+		this.addWindowListener(new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				super.windowClosing(e);
+				sudoku.saveLastSudoku();
+			}
+			
+		});
+
 		this.getContentPane().add(toolBar, BorderLayout.NORTH);
 		this.getContentPane().add(sudoku);
 		this.setVisible(true);
